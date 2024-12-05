@@ -2,6 +2,7 @@ import { solveD1P1, solveD1P2 } from "./day1/solution.ts";
 import { solveD2P1, solveD2P2 } from "./day2/solution.ts";
 import { solveD3P1, solveD3P2 } from "./day3/solution.ts";
 import { solveD4P1, solveD4P2 } from "./day4/solution.ts";
+import { solveD5P1, solveD5P2 } from "./day5/solution.ts";
 
 const solutions = [
     solveD1P1,
@@ -12,6 +13,8 @@ const solutions = [
     solveD3P2,
     solveD4P1,
     solveD4P2,
+    solveD5P1,
+    solveD5P2,
 ];
 
 console.time("all");
