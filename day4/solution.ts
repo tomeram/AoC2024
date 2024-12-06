@@ -67,9 +67,10 @@ function countWords(lines: string[], row: number, col: number): number {
         }
     }
 
-    return Object.values(words).map((_) => _.join("")).filter((_) =>
-        _ === "XMAS"
-    ).length;
+    return Object.values(words)
+        .map((_) => _.join(""))
+        .filter((_) => _ === "XMAS")
+        .length;
 }
 
 export async function solveD4P2() {
