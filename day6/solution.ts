@@ -3,7 +3,7 @@ import { getLines, sleep } from "../utils.ts";
 import _ from "npm:lodash";
 import chalk from "npm:chalk";
 
-const debug = true;
+const debug = false;
 
 export async function solveD6P1() {
     const lines = await getLines(6);
@@ -60,10 +60,12 @@ export async function solveD6P2() {
 
     while (guardInBound(map, pos)) {
         const block = canBlockHere();
-        if (block != null && block.x !== startPos.x && block.y !== startPos.y) {
+        if (
+            block != null && (block.x !== startPos.x || block.y !== startPos.y)
+        ) {
             const posString = `${block.x},${block.y}`;
             blockPositions.add(posString);
-            await keypress();
+            // await keypress();
         }
         moveGuard(pos, map);
     }
@@ -205,14 +207,14 @@ function printMap(map: string[][], globalMap: string[][] | null = null) {
     console.log("------------------------------------------------------------");
 }
 
-function keypress() {
-    process.stdin.setRawMode(true);
-    return new Promise((resolve) =>
-        process.stdin.once("data", () => {
-            process.stdin.setRawMode(false);
-            resolve(null);
-        })
-    );
-}
+// function keypress() {
+//     process.stdin.setRawMode(true);
+//     return new Promise((resolve) =>
+//         process.stdin.once("data", () => {
+//             process.stdin.setRawMode(false);
+//             resolve(null);
+//         })
+//     );
+// }
 
 type Pos = { x: number; y: number; d: Dir };
