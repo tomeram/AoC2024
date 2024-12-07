@@ -4,6 +4,7 @@ import { solveD3P1, solveD3P2 } from "./day3/solution.ts";
 import { solveD4P1, solveD4P2 } from "./day4/solution.ts";
 import { solveD5P1, solveD5P2 } from "./day5/solution.ts";
 import { solveD6P1, solveD6P2 } from "./day6/solution.ts";
+import { solveD7P1, solveD7P2 } from "./day7/solution.ts";
 
 const solutions = [
     solveD1P1,
@@ -18,6 +19,8 @@ const solutions = [
     solveD5P2,
     solveD6P1,
     solveD6P2,
+    solveD7P1,
+    solveD7P2,
 ];
 
 async function runAll() {
@@ -35,5 +38,6 @@ async function runLast() {
 }
 
 console.time("all");
-await Promise.all([runAll(), runLast()]);
+await runLast();
+await runAll();
 console.timeEnd("all");
