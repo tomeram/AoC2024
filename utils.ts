@@ -10,3 +10,13 @@ export async function getLines(day: number) {
 export async function sleep(time: number = 1000) {
     return new Promise((res) => setTimeout(res, time));
 }
+
+function awaitKeypress() {
+    process.stdin.setRawMode(true);
+    return new Promise((resolve) =>
+        process.stdin.once("data", () => {
+            process.stdin.setRawMode(false);
+            resolve(null);
+        })
+    );
+}

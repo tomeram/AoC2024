@@ -20,14 +20,20 @@ const solutions = [
     solveD6P2,
 ];
 
-console.time("all");
-for (let i = 0; i < solutions.length - 1; i++) {
-    await solutions[i]();
+async function runAll() {
+    const toRun = solutions.slice(0, solutions.length - 1);
+    console.time("previous");
+    await Promise.all(toRun.map((_) => _()));
+    console.timeEnd("previous");
 }
 
-console.time("last");
-const res = await solutions[solutions.length - 1]();
-console.timeEnd("last");
-console.timeEnd("all");
+async function runLast() {
+    console.time("last");
+    const res = await solutions[solutions.length - 1]();
+    console.timeEnd("last");
+    console.log(res);
+}
 
-console.log(res);
+console.time("all");
+await Promise.all([runAll(), runLast()]);
+console.timeEnd("all");

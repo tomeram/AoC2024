@@ -11,10 +11,9 @@ export async function solveD6P1() {
 
     printMap(map);
 
-    while (guardInBound(map, pos)) {
+    while (isInBound(map, pos)) {
         moveGuard();
         printMap(map);
-        // await sleep(10);
     }
 
     printMap(map);
@@ -33,7 +32,7 @@ export async function solveD6P1() {
     function moveGuard() {
         const dir = dirToCell[pos.d];
         const nextPos = { ...pos, x: pos.x + dir.x, y: pos.y + dir.y };
-        const nextCell = guardInBound(map, nextPos)
+        const nextCell = isInBound(map, nextPos)
             ? map[pos.x + dir.x][pos.y + dir.y]
             : ".";
         if (nextCell === "#") {
@@ -45,7 +44,7 @@ export async function solveD6P1() {
         map[pos.x][pos.y] = "X";
         pos.x += dir.x;
         pos.y += dir.y;
-        if (guardInBound(map, pos)) {
+        if (isInBound(map, pos)) {
             map[pos.x][pos.y] = pos.d;
         }
     }
@@ -58,14 +57,13 @@ export async function solveD6P2() {
 
     const blockPositions = new Set<string>();
 
-    while (guardInBound(map, pos)) {
+    while (isInBound(map, pos)) {
         const block = canBlockHere();
         if (
             block != null && (block.x !== startPos.x || block.y !== startPos.y)
         ) {
             const posString = `${block.x},${block.y}`;
             blockPositions.add(posString);
-            // await keypress();
         }
         moveGuard(pos, map);
     }
@@ -92,7 +90,7 @@ export async function solveD6P2() {
 
         pos.x += dir.x;
         pos.y += dir.y;
-        if (guardInBound(map, pos)) {
+        if (isInBound(map, pos)) {
             map[pos.x][pos.y] = pos.d;
         }
     }
@@ -100,7 +98,7 @@ export async function solveD6P2() {
     function canBlockHere(): Pos | null {
         const { nextCell, nextPos: potentialBlock } = getNextCell(pos, map);
 
-        if (!guardInBound(map, potentialBlock) || nextCell === "#") {
+        if (!isInBound(map, potentialBlock) || nextCell !== ".") {
             return null;
         }
 
@@ -111,15 +109,17 @@ export async function solveD6P2() {
         };
         const workingMap = _.cloneDeep(map);
         workingMap[potentialBlock.x][potentialBlock.y] = "O";
+        moveGuard(nextPos, workingMap);
 
         while (true) {
-            if (!guardInBound(workingMap, nextPos)) {
+            if (!isInBound(workingMap, nextPos)) {
                 return null;
             }
 
             const { nextCell } = getNextCell(nextPos, workingMap);
             if (nextCell === nextPos.d) {
                 printMap(workingMap, map);
+
                 return potentialBlock;
             }
 
@@ -154,13 +154,13 @@ function getNextCell(
 ) {
     const dir = dirToCell[pos.d];
     const nextPos = { ...pos, x: pos.x + dir.x, y: pos.y + dir.y };
-    const nextCell = guardInBound(map, nextPos)
+    const nextCell = isInBound(map, nextPos)
         ? map[pos.x + dir.x][pos.y + dir.y]
         : ".";
     return { nextCell, nextPos };
 }
 
-function guardInBound(map: string[][], pos: Pos) {
+function isInBound(map: string[][], pos: Pos) {
     return pos.x >= 0 &&
         pos.x < map.length &&
         pos.y >= 0 &&
@@ -206,15 +206,5 @@ function printMap(map: string[][], globalMap: string[][] | null = null) {
     }
     console.log("------------------------------------------------------------");
 }
-
-// function keypress() {
-//     process.stdin.setRawMode(true);
-//     return new Promise((resolve) =>
-//         process.stdin.once("data", () => {
-//             process.stdin.setRawMode(false);
-//             resolve(null);
-//         })
-//     );
-// }
 
 type Pos = { x: number; y: number; d: Dir };
