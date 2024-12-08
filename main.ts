@@ -5,6 +5,7 @@ import { solveD4P1, solveD4P2 } from "./day4/solution.ts";
 import { solveD5P1, solveD5P2 } from "./day5/solution.ts";
 import { solveD6P1, solveD6P2 } from "./day6/solution.ts";
 import { solveD7P1, solveD7P2 } from "./day7/solution.ts";
+import { solveD8P1, solveD8P2 } from "./day8/solution.ts";
 
 const solutions = [
     solveD1P1,
@@ -21,6 +22,8 @@ const solutions = [
     solveD6P2,
     solveD7P1,
     solveD7P2,
+    solveD8P1,
+    solveD8P2,
 ];
 
 async function runAll() {
