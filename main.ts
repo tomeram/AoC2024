@@ -1,5 +1,6 @@
 import { solveD1P1, solveD1P2 } from "./day1/solution.ts";
 import { solveD10P1, solveD10P2 } from "./day10/solution.ts";
+import { solveD11P1, solveD11P2 } from "./day11/solution.ts";
 import { solveD2P1, solveD2P2 } from "./day2/solution.ts";
 import { solveD3P1, solveD3P2 } from "./day3/solution.ts";
 import { solveD4P1, solveD4P2 } from "./day4/solution.ts";
@@ -30,6 +31,8 @@ const solutions = [
     solveD9P2,
     solveD10P1,
     solveD10P2,
+    solveD11P1,
+    solveD11P2,
 ];
 
 async function runAll() {
