@@ -2,6 +2,8 @@ import { solveD1P1, solveD1P2 } from './day1/solution.ts';
 import { solveD10P1, solveD10P2 } from './day10/solution.ts';
 import { solveD11P1, solveD11P2 } from './day11/solution.ts';
 import { solveD12P1, solveD12P2 } from './day12/solution.ts';
+import { solveD13P1, solveD13P2 } from './day13/solution.ts';
+import { solveD14P1, solveD14P2 } from './day14/solution.ts';
 import { solveD2P1, solveD2P2 } from './day2/solution.ts';
 import { solveD3P1, solveD3P2 } from './day3/solution.ts';
 import { solveD4P1, solveD4P2 } from './day4/solution.ts';
@@ -36,6 +38,10 @@ const solutions = [
 	solveD11P2,
 	solveD12P1,
 	solveD12P2,
+	solveD13P1,
+	solveD13P2,
+	solveD14P1,
+	solveD14P2,
 ];
 
 async function runAll() {
@@ -54,5 +60,5 @@ async function runLast() {
 
 console.time('all');
 await runLast();
-await runAll();
+// await runAll();
 console.timeEnd('all');
