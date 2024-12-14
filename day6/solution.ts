@@ -1,210 +1,206 @@
-import { getLines, sleep } from "../utils.ts";
+import { getLines, sleep } from '../utils.ts';
 // @deno-types="npm:@types/lodash"
-import _ from "npm:lodash";
-import chalk from "npm:chalk";
+import _ from 'npm:lodash';
+import chalk from 'npm:chalk';
 
 const debug = false;
 
 export async function solveD6P1() {
-    const lines = await getLines(6);
-    const { map, pos } = readMap(lines);
+	const lines = await getLines(6);
+	const { map, pos } = readMap(lines);
 
-    printMap(map);
+	printMap(map);
 
-    while (isInBound(map, pos)) {
-        moveGuard();
-        printMap(map);
-    }
+	while (isInBound(map, pos)) {
+		moveGuard();
+		printMap(map);
+	}
 
-    printMap(map);
+	printMap(map);
 
-    let res = 0;
-    for (const row of map) {
-        for (const cell of row) {
-            if (cell === "X") {
-                res++;
-            }
-        }
-    }
+	let res = 0;
+	for (const row of map) {
+		for (const cell of row) {
+			if (cell === 'X') {
+				res++;
+			}
+		}
+	}
 
-    return res;
+	return res;
 
-    function moveGuard() {
-        const dir = dirToCell[pos.d];
-        const nextPos = { ...pos, x: pos.x + dir.x, y: pos.y + dir.y };
-        const nextCell = isInBound(map, nextPos)
-            ? map[pos.x + dir.x][pos.y + dir.y]
-            : ".";
-        if (nextCell === "#") {
-            pos.d = dir.r;
-            map[pos.x][pos.y] = pos.d;
-            return;
-        }
+	function moveGuard() {
+		const dir = dirToCell[pos.d];
+		const nextPos = { ...pos, x: pos.x + dir.x, y: pos.y + dir.y };
+		const nextCell = isInBound(map, nextPos) ? map[pos.x + dir.x][pos.y + dir.y] : '.';
+		if (nextCell === '#') {
+			pos.d = dir.r;
+			map[pos.x][pos.y] = pos.d;
+			return;
+		}
 
-        map[pos.x][pos.y] = "X";
-        pos.x += dir.x;
-        pos.y += dir.y;
-        if (isInBound(map, pos)) {
-            map[pos.x][pos.y] = pos.d;
-        }
-    }
+		map[pos.x][pos.y] = 'X';
+		pos.x += dir.x;
+		pos.y += dir.y;
+		if (isInBound(map, pos)) {
+			map[pos.x][pos.y] = pos.d;
+		}
+	}
 }
 
 export async function solveD6P2() {
-    const lines = await getLines(6);
-    const { map, pos } = readMap(lines);
-    const startPos = { ...pos };
+	const lines = await getLines(6);
+	const { map, pos } = readMap(lines);
+	const startPos = { ...pos };
 
-    const blockPositions = new Set<string>();
+	const blockPositions = new Set<string>();
 
-    while (isInBound(map, pos)) {
-        const block = canBlockHere();
-        if (
-            block != null && (block.x !== startPos.x || block.y !== startPos.y)
-        ) {
-            const posString = `${block.x},${block.y}`;
-            blockPositions.add(posString);
-        }
-        moveGuard(pos, map);
-    }
+	while (isInBound(map, pos)) {
+		const block = canBlockHere();
+		if (
+			block != null && (block.x !== startPos.x || block.y !== startPos.y)
+		) {
+			const posString = `${block.x},${block.y}`;
+			blockPositions.add(posString);
+		}
+		moveGuard(pos, map);
+	}
 
-    if (debug) {
-        for (const pos of Array.from(blockPositions)) {
-            const [x, y] = pos.split(",").map((_) => parseInt(_));
+	if (debug) {
+		for (const pos of Array.from(blockPositions)) {
+			const [x, y] = pos.split(',').map((_) => parseInt(_));
 
-            map[x][y] = "O";
-        }
+			map[x][y] = 'O';
+		}
 
-        printMap(map);
-    }
+		printMap(map);
+	}
 
-    return blockPositions.size;
+	return blockPositions.size;
 
-    function moveGuard(pos: Pos, map: string[][]) {
-        const dir = dirToCell[pos.d];
-        const { nextCell } = getNextCell(pos, map);
-        if (nextCell === "#" || nextCell === "O") {
-            pos.d = dir.r;
-            return;
-        }
+	function moveGuard(pos: Pos, map: string[][]) {
+		const dir = dirToCell[pos.d];
+		const { nextCell } = getNextCell(pos, map);
+		if (nextCell === '#' || nextCell === 'O') {
+			pos.d = dir.r;
+			return;
+		}
 
-        pos.x += dir.x;
-        pos.y += dir.y;
-        if (isInBound(map, pos)) {
-            map[pos.x][pos.y] = pos.d;
-        }
-    }
+		pos.x += dir.x;
+		pos.y += dir.y;
+		if (isInBound(map, pos)) {
+			map[pos.x][pos.y] = pos.d;
+		}
+	}
 
-    function canBlockHere(): Pos | null {
-        const { nextCell, nextPos: potentialBlock } = getNextCell(pos, map);
+	function canBlockHere(): Pos | null {
+		const { nextCell, nextPos: potentialBlock } = getNextCell(pos, map);
 
-        if (!isInBound(map, potentialBlock) || nextCell !== ".") {
-            return null;
-        }
+		if (!isInBound(map, potentialBlock) || nextCell !== '.') {
+			return null;
+		}
 
-        const nextPos = {
-            x: pos.x,
-            y: pos.y,
-            d: dirToCell[pos.d].r,
-        };
-        const workingMap = _.cloneDeep(map);
-        workingMap[potentialBlock.x][potentialBlock.y] = "O";
-        moveGuard(nextPos, workingMap);
+		const nextPos = {
+			x: pos.x,
+			y: pos.y,
+			d: dirToCell[pos.d].r,
+		};
+		const workingMap = _.cloneDeep(map);
+		workingMap[potentialBlock.x][potentialBlock.y] = 'O';
+		moveGuard(nextPos, workingMap);
 
-        while (true) {
-            if (!isInBound(workingMap, nextPos)) {
-                return null;
-            }
+		while (true) {
+			if (!isInBound(workingMap, nextPos)) {
+				return null;
+			}
 
-            const { nextCell } = getNextCell(nextPos, workingMap);
-            if (nextCell === nextPos.d) {
-                printMap(workingMap, map);
+			const { nextCell } = getNextCell(nextPos, workingMap);
+			if (nextCell === nextPos.d) {
+				printMap(workingMap, map);
 
-                return potentialBlock;
-            }
+				return potentialBlock;
+			}
 
-            moveGuard(nextPos, workingMap);
-        }
-    }
+			moveGuard(nextPos, workingMap);
+		}
+	}
 }
 
 function readMap(
-    lines: string[],
+	lines: string[],
 ): { map: string[][]; pos: Pos } {
-    const map: string[][] = [];
-    const pos = { x: 0, y: 0, d: Dir.up };
-    for (const line of lines) {
-        const row = line.split("");
-        map.push(row);
-        const guardPos = row.indexOf("^");
+	const map: string[][] = [];
+	const pos = { x: 0, y: 0, d: Dir.up };
+	for (const line of lines) {
+		const row = line.split('');
+		map.push(row);
+		const guardPos = row.indexOf('^');
 
-        if (guardPos > 0) {
-            pos.x = map.length - 1;
-            pos.y = guardPos;
-            pos.d = row[guardPos] as Dir;
-        }
-    }
+		if (guardPos > 0) {
+			pos.x = map.length - 1;
+			pos.y = guardPos;
+			pos.d = row[guardPos] as Dir;
+		}
+	}
 
-    return { map, pos };
+	return { map, pos };
 }
 
 function getNextCell(
-    pos: Pos,
-    map: string[][],
+	pos: Pos,
+	map: string[][],
 ) {
-    const dir = dirToCell[pos.d];
-    const nextPos = { ...pos, x: pos.x + dir.x, y: pos.y + dir.y };
-    const nextCell = isInBound(map, nextPos)
-        ? map[pos.x + dir.x][pos.y + dir.y]
-        : ".";
-    return { nextCell, nextPos };
+	const dir = dirToCell[pos.d];
+	const nextPos = { ...pos, x: pos.x + dir.x, y: pos.y + dir.y };
+	const nextCell = isInBound(map, nextPos) ? map[pos.x + dir.x][pos.y + dir.y] : '.';
+	return { nextCell, nextPos };
 }
 
 function isInBound(map: string[][], pos: Pos) {
-    return pos.x >= 0 &&
-        pos.x < map.length &&
-        pos.y >= 0 &&
-        pos.y < map[0].length;
+	return pos.x >= 0 &&
+		pos.x < map.length &&
+		pos.y >= 0 &&
+		pos.y < map[0].length;
 }
 
 enum Dir {
-    up = "^",
-    down = "V",
-    left = "<",
-    right = ">",
+	up = '^',
+	down = 'V',
+	left = '<',
+	right = '>',
 }
 
 const dirToCell = {
-    [Dir.up]: { x: -1, y: 0, r: Dir.right },
-    [Dir.right]: { x: 0, y: 1, r: Dir.down },
-    [Dir.down]: { x: 1, y: 0, r: Dir.left },
-    [Dir.left]: { x: 0, y: -1, r: Dir.up },
+	[Dir.up]: { x: -1, y: 0, r: Dir.right },
+	[Dir.right]: { x: 0, y: 1, r: Dir.down },
+	[Dir.down]: { x: 1, y: 0, r: Dir.left },
+	[Dir.left]: { x: 0, y: -1, r: Dir.up },
 };
 
 function printMap(map: string[][], globalMap: string[][] | null = null) {
-    if (!debug) return;
-    console.log("------------------------------------------------------------");
-    for (let i = 0; i < map.length; i++) {
-        const row = map[i];
-        console.log(
-            row.map((_, j) => {
-                if (_ === "#") {
-                    return chalk.green(_);
-                }
+	if (!debug) return;
+	console.log('------------------------------------------------------------');
+	for (let i = 0; i < map.length; i++) {
+		const row = map[i];
+		console.log(
+			row.map((_, j) => {
+				if (_ === '#') {
+					return chalk.green(_);
+				}
 
-                if (_ === "O") {
-                    return chalk.red(_);
-                }
+				if (_ === 'O') {
+					return chalk.red(_);
+				}
 
-                if (globalMap == null) {
-                    return _;
-                }
+				if (globalMap == null) {
+					return _;
+				}
 
-                return globalMap[i][j] === _ ? _ : chalk.bgBlue(_);
-            }).join(""),
-        );
-    }
-    console.log("------------------------------------------------------------");
+				return globalMap[i][j] === _ ? _ : chalk.bgBlue(_);
+			}).join(''),
+		);
+	}
+	console.log('------------------------------------------------------------');
 }
 
 type Pos = { x: number; y: number; d: Dir };
