@@ -1,5 +1,7 @@
 import { getLines } from '../utils.ts';
 
+const debug = false;
+
 const mod = (m: number, n: number) => ((m % n) + n) % n;
 
 const dimX = 103;
@@ -24,7 +26,9 @@ export async function solveD14P2() {
 		const map = printMap(bots, false);
 
 		if (/[^\.]{10}/.exec(map)) {
-			console.log(map);
+			if (debug) {
+				console.log(map);
+			}
 			break;
 		}
 
